@@ -95,8 +95,8 @@ program:
     |                                               {printf("NADA\n");}
     ;
 seq:
-    dec ';'
-    | dec ';' seq                                     {printf("SEQUENCIA\n");}
+    dec PVIRG_TOK
+    | dec PVIRG_TOK seq                                     {printf("SEQUENCIA\n");}
     ;   
 dec:
     cond                                            {printf("DECLARACAO\n");}
@@ -104,17 +104,18 @@ dec:
     | atr                                           {printf("DECLARACAO\n");}
     | lei                                           {printf("DECLARACAO\n");}
     | esc                                           {printf("DECLARACAO\n");}
+    | exp                                           {;}
     ;
 cond:
-    IF_TOK exp '{' seq '}'                          {printf("CONDICIONAL\n");}
-    | IF_TOK exp '{' seq '}' ELSE_TOK '{' seq '}'   {printf("CONDICIONAL\n");}
+    IF_TOK exp A_CHA_TOK seq F_CHA_TOK                                      {printf("CONDICIONAL\n");}
+    | IF_TOK exp A_CHA_TOK seq F_CHA_TOK ELSE_TOK A_CHA_TOK seq F_CHA_TOK   {printf("CONDICIONAL\n");}
     ;
 rep: 
-    FOR_TOK exp '{' seq '}'                         {printf("REPETICAO\n");}
-    | WHILE_TOK exp '{' seq '}'                     {printf("REPETICAO\n");}
+    FOR_TOK exp A_CHA_TOK seq F_CHA_TOK                         {printf("REPETICAO\n");}
+    | WHILE_TOK exp A_CHA_TOK seq F_CHA_TOK                     {printf("REPETICAO\n");}
     ;
 atr:
-    ID IG_TOK exp                                   {printf("ATRIBUICAO\n");}
+    ID ATR_TOK exp                                   {printf("ATRIBUICAO\n");}
     ;           
 lei:    
     SCAN_TOK ID                                     {printf("LEITURA\n");}
