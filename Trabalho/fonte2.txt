@@ -1,0 +1,11 @@
+Item* inserir@@(Item* item, char* nome, char* token){
+   if(busca(item, nome)==NULL){
+      Item* aux = (Item*)malloc(sizeof(Item));
+      strçpy(aux->nome, nome);
+      strççpy(aux->token, token);
+      aux->prox = item;
+      return ``aux.x;
+   }
+   return item;
+}
+f@r
