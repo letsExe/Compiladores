@@ -96,11 +96,12 @@ program:
     ;
 seq:
     dec PVIRG_TOK
-    | dec PVIRG_TOK seq                                     {printf("SEQUENCIA\n");}
+    | dec PVIRG_TOK seq                             {printf("SEQUENCIA\n");}
     ;   
 dec:
     cond                                            {printf("DECLARACAO\n");}
-    | rep                                           {printf("DECLARACAO\n");}
+    | rep_for                                       {printf("DECLARACAO\n");}
+    | rep_while                                     {printf("DECLARACAO\n");}
     | atr                                           {printf("DECLARACAO\n");}
     | lei                                           {printf("DECLARACAO\n");}
     | esc                                           {printf("DECLARACAO\n");}
@@ -110,25 +111,54 @@ cond:
     IF_TOK exp A_CHA_TOK seq F_CHA_TOK                                      {printf("CONDICIONAL\n");}
     | IF_TOK exp A_CHA_TOK seq F_CHA_TOK ELSE_TOK A_CHA_TOK seq F_CHA_TOK   {printf("CONDICIONAL\n");}
     ;
-rep: 
-    FOR_TOK exp A_CHA_TOK seq F_CHA_TOK                         {printf("REPETICAO\n");}
-    | WHILE_TOK exp A_CHA_TOK seq F_CHA_TOK                     {printf("REPETICAO\n");}
+rep_for: // n ta reconehcendo
+    FOR_TOK A_PAR_TOK atr exp PVIRG_TOK exp PVIRG_TOK exp F_PAR_TOK A_CHA_TOK seq F_CHA_TOK {printf("REPETICAO - FOR\n");}                                                                                          
+    ;
+rep_while: // n ta reconehcendo
+    WHILE_TOK exp A_CHA_TOK seq F_CHA_TOK               {printf("REPETICAO - WHILE\n");}
     ;
 atr:
-    ID ATR_TOK exp                                   {printf("ATRIBUICAO\n");}
+    ID ATR_TOK exp                                      {printf("ATRIBUICAO\n");}
     ;           
 lei:    
-    SCAN_TOK ID                                     {printf("LEITURA\n");}
+    SCAN_TOK ID                                         {printf("LEITURA\n");}
     ;
 esc:
-    PRINT_TOK exp                                   {printf("ESCRITA\n");}
+    PRINT_TOK exp                                       {printf("ESCRITA\n");}
     ;
 exp:
-    DIGITO                                      {printf("EXP\n");}
+    exp_simples comp_op exp_simples                     {printf("COMPARACAO\n");}
+    | exp_simples                                       {printf("EXP\n");}
+    ;
+comp_op:
+    MAI_TOK                                             {printf("MAIOR\n");}
+    | MEN_TOK                                           {printf("MENOE\n");}
+    ;
+exp_simples: 
+    exp_simples soma termo                              {printf("SOMA DE TERMOS\n"); }
+    | termo                                             {printf("TERMO\n"); }
     ;
 
+soma: 
+    MAIS_TOK                                            {printf("SOMA\n"); }
+    | MENOS_TOK                                         {printf("SUBTRACAO\n"); }
+    ;
 
+termo: 
+    termo mult fator                                    {printf("MULTIPLICACAO DE FATORES\n"); }
+    | fator                                             {printf("FATOR\n"); }
+    ;
 
+mult: 
+    MULT_TOK                                            {printf("MULT\n"); }
+    | DIV_TOK                                           {printf("DIV\n"); }
+    ;
+
+fator: 
+    A_PAR_TOK exp F_PAR_TOK                             {printf("EXPRESSAO ENTRE PARENTESES\n"); }
+    | DIGITO                                            {printf("DIGITO\n"); }
+    | ID                                                {printf("ID\n"); }
+    ;
 %%
 
 void yyerror(char *s){
